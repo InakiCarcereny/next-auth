@@ -18,8 +18,13 @@ import { CardWrapper } from '@/app/components/CardWrapper';
 import { Button } from '@/components/ui/button';
 import { FormError } from '@/app/components/FormError';
 import { FormSucces } from '@/app/components/FormSucces';
+import { login } from '@/app/actions/login';
+import { useState } from 'react';
 
 export function LoginForm() {
+  const [error, setError] = useState<string | undefined>('');
+  const [success, setSuccess] = useState<string | undefined>('');
+
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -29,7 +34,13 @@ export function LoginForm() {
   });
 
   const onSubmit = (values: LoginSchemaType) => {
-    console.log(values);
+    setError('');
+    setSuccess('');
+
+    login(values).then((data) => {
+      setError(data.error);
+      setSuccess(data.success);
+    });
   };
 
   return (
@@ -75,8 +86,8 @@ export function LoginForm() {
             />
           </div>
 
-          <FormError message="Invalid credentials!" />
-          <FormSucces message="Login succesful!" />
+          <FormError message={error as string} />
+          <FormSucces message={success as string} />
           <Button type="submit" className="w-full" variant="default">
             Login
           </Button>
