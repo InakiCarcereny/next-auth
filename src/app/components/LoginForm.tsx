@@ -38,8 +38,7 @@ export function LoginForm() {
     setSuccess('');
 
     login(values).then((data) => {
-      setError(data.error);
-      setSuccess(data.success);
+      setError(data?.error);
     });
   };
 
